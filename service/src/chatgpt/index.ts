@@ -36,22 +36,23 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
 (async () => {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
-
   if (isNotEmptyString(process.env.OPENAI_API_KEY)) {
     const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
-
     const options: ChatGPTAPIOptions = {
       apiKey: process.env.OPENAI_API_KEY,
       completionParams: { model },
       debug: !disableDebug,
     }
-
     // increase max token limit if use gpt-4
     if (model.toLowerCase().includes('gpt-4')) {
       // if use 32k model
       if (model.toLowerCase().includes('32k')) {
         options.maxModelTokens = 32768
         options.maxResponseTokens = 8192
+      }
+      else if (model.toLowerCase().includes('16k')) {
+        options.maxModelTokens = 16384
+        options.maxResponseTokens = 4096
       }
       else {
         options.maxModelTokens = 8192
